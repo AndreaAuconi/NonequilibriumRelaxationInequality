@@ -1,5 +1,4 @@
 import os
-#os.chdir('/home/andrea/Desktop/StochThermo_InfoGeom/Revision_FokkerPlanck/Method/')
 import numpy as np
 import matplotlib.pyplot as plt
 from joblib import Parallel, delayed
@@ -13,7 +12,7 @@ from tqdm import tqdm
 # %% Settings
 
 # which plot
-Fig = 'A1'
+Fig = 'Random'
 
 # model parameters
 T = 5.
@@ -21,28 +20,28 @@ approx_eq = False
 
 # spatial discretization parameters
 l = 12.
-discretization = 400
+discretization = 300
 
 #steady-state estimation
 if Fig in ['2', 'A1', 'A4']:
     t_init = 35.
 else:
-    t_init = 50.
+    t_init = 55.
     
 # time discretization parameters    
 sampling_interval_init = 100
 dt_init = 2e-3
 t_experiment = 1e-2
-dt_experiment = 2e-5
-sampling_interval_experiment = 25
+dt_experiment = 1e-5
+sampling_interval_experiment = 50
 
 # smoothing fields parameters
 border_exponent = 4
-precision_smoothing = 500
+precision_smoothing = 1000
 coeff_smoothing = 0.05
 
 # random fields parameters
-nonlinearity = 1.2
+nonlinearity = 1.
 n_std = 5
 
 # experiments parameters
@@ -58,7 +57,7 @@ else:
 n_replicas = 1000
 
 # multiprocessing parameter
-fraction_cores = 0.45
+fraction_cores = 0.7
 
 n_cores = int(multiprocessing.cpu_count()*fraction_cores)
 print('n_cores = ' + str(n_cores))
@@ -72,13 +71,14 @@ load_steady_state = False
 
 # %% Force field
 
+beta = 1.
 gamma = 3.
 
 if Fig == '2':
-    F = class_Fields.getOUField(gamma)
+    F = class_Fields.getOUField(beta, gamma)
 elif Fig == 'A1' or Fig == 'A4':
     mu1, mu2 = 2/15, 2.
-    F = class_Fields.getQuadraticField(gamma, mu1, mu2)
+    F = class_Fields.getQuadraticField(beta, gamma, mu1, mu2)
 else:
     force, conf_par1, conf_par2 = 50., 0.2, 1.2
     parameters_x, parameters_y = np.random.normal(0,1,10), np.random.normal(0,1,10)

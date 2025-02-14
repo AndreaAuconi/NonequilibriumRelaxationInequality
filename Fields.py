@@ -63,15 +63,13 @@ class Fields:
             q = displacement_dyn_step (q)
         phi = q/p - 1.
         phi = phi - E(p, phi)
-        #phi *= self.border_smooth
         bounds = 0.8
         phi = np.maximum(phi, -bounds*np.ones_like(phi))
         phi = np.minimum(phi, bounds*np.ones_like(phi)) 
         phi = smoothing (phi, self.dl, self.coeff_smoothing, self.precision_smoothing)      
         phi = phi - E(p, phi)
         return phi
-    
-    
+        
     def getRandomField(self, force, parameters_x, parameters_y, conf_par1, conf_par2):        
         f00, fx, fy, fxx, fyy, fxy, fxxx, fyyy, fxxy, fxyy = parameters_x
         g00, gx, gy, gxx, gyy, gxy, gxxx, gyyy, gxxy, gxyy = parameters_y
@@ -89,8 +87,8 @@ class Fields:
         y_comp = smoothing(y_comp, self.dl, self.coeff_smoothing, self.precision_smoothing)
         return np.array([x_comp, y_comp])
     
-    def getOUField(self, gamma):
-        x_comp = -self.xMatrix
+    def getOUField(self, beta, gamma):
+        x_comp = -beta*self.xMatrix
         y_comp = gamma * (-self.yMatrix + self.xMatrix)
         x_comp *= self.border_smooth
         y_comp *= self.border_smooth
@@ -98,8 +96,8 @@ class Fields:
         y_comp = smoothing(y_comp, self.dl, self.coeff_smoothing, self.precision_smoothing)
         return np.array([x_comp, y_comp])
   
-    def getQuadraticField(self, gamma, mu1, mu2):
-        x_comp = -self.xMatrix
+    def getQuadraticField(self, beta, gamma, mu1, mu2):
+        x_comp = -beta*self.xMatrix
         y_comp = gamma * (-self.yMatrix + mu1*self.xx -mu2*self.unitMatrix)
         x_comp *= self.border_smooth
         y_comp *= self.border_smooth
